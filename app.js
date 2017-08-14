@@ -6,7 +6,9 @@ var app = express();
 var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
-var elastic = require('elasticsearch')
+
+// var restangular = require('restangular');
+var elastic = require('elasticsearch');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -18,6 +20,9 @@ var client = new elastic.Client({
 
 app.get('/', function(req, res, next) {
   res.sendFile(path.join(__dirname + '/index.html'));
+});
+
+app.get('/search/:q', function(req, res) {
   client.ping({
     requestTimeout: 30000
   }, function(err) {

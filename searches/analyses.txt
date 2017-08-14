@@ -1,0 +1,51 @@
+curl -XPOST localhost:9200/demo/_analyze?pretty -d '{
+  "char_filter" : ["replace_camel_case"],
+  "tokenizer" : "whitespace",
+  "text" : "ThisShouldBeBrokenUp"
+}'
+
+curl -XPOST localhost:9200/demo/_analyze?pretty -d '{
+  "tokenizer" : "edge_ngram",
+  "text" : "Cheese tastes disgusting!"
+}'
+
+curl -XPOST localhost:9200/demo/_analyze?pretty -d '{
+  "filter" : ["stemmer_demo"],
+  "text" : "Running run run ran ran runner"
+}'
+
+curl -XPOST localhost:9200/demo/_analyze?pretty -d '{
+  "tokenizer" : "whitespace",
+  "filter" : ["edgeNGram"],
+  "text" : "Cheese tastes disgusting!"
+}'
+
+curl localhost:9200/demo/_search?pretty -d '{
+  "suggest" : {
+    "book-suggest" : {
+      "prefix" : "bri",
+      "completion" : {
+        "field" : "suggest",
+        "fuzzy" : {
+          "fuzziness" : "AUTO"
+        }
+      }
+    }
+  }
+}'
+
+curl -XPUT localhost:9200/demo/_settings?pretty -d '{
+  "analysis" : {
+    "filter" : {
+      "edgeNGram" : {
+        "type" : "edgeNGram",
+        "min_gram" : 2,
+        "max_gram" : 5
+      },
+      "stemmer_demo" : {
+        "type" : "stemmer",
+        "name" : "english"
+      }
+    }
+  }
+}'

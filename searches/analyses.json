@@ -1,0 +1,65 @@
+/*Character filters*/
+
+curl -XPOST localhost:9200/demo/_settings -d '{
+  "analysis" : {
+    "char_filter" : {
+      "mapper_demo" : {
+        "type" : "mapping",
+        "mappings" : [
+          "@ => a",
+          "3 => e"
+        ]
+      },
+      "pattern_demo" : {
+        "type" : "pattern_replace",
+        "pattern" : "(?<=\\p{Lower})(?=\\p{Upper})",
+        "replacement" : " "
+      }
+    }
+  }
+}'
+
+/*Tokenizers*/
+
+{
+  "analysis" : {
+    "tokenizer" : {
+      "edge_ngram" : {
+        "type" : "edge_ngram",
+        "min_gram" : 2,
+        "max_gram" : 5
+      }
+    }
+  }
+}
+
+/*Token filters*/
+
+{
+  "analysis" : {
+    "filter" : {
+      "edgeNGram" : {
+        "type" : "edgeNGram",
+        "min_gram" : 2,
+        "max_gram" : 5
+      },
+      "stemmer_demo" : {
+        "type" : "stemmer",
+        "name" : "english"
+      }
+    }
+  }
+}
+
+/*Different analyzer*/
+
+{
+  "analysis" : {
+    "analyzer" : {
+      "edge_ngram" : {
+        "type" : "custom",
+
+      }
+    }
+  }
+}
