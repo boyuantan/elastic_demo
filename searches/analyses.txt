@@ -1,3 +1,5 @@
+curl -XPOST localhost:9200/demo/_close?pretty
+
 curl -XPOST localhost:9200/demo/_analyze?pretty -d '{
   "char_filter" : ["replace_camel_case"],
   "tokenizer" : "whitespace",
@@ -18,6 +20,11 @@ curl -XPOST localhost:9200/demo/_analyze?pretty -d '{
   "tokenizer" : "whitespace",
   "filter" : ["edgeNGram"],
   "text" : "Cheese tastes disgusting!"
+}'
+
+curl -XPOST localhost:9200/demo/_analyze?pretty -d '{
+  "tokenizer" : "tokenizer_demo",
+  "text" : "CheeseTastesDisgusting!"
 }'
 
 curl localhost:9200/demo/_search?pretty -d '{
@@ -48,4 +55,29 @@ curl -XPUT localhost:9200/demo/_settings?pretty -d '{
       }
     }
   }
+}'
+
+curl -XPUT localhost:9200/demo/_settings?pretty -d ''
+
+curl -XPUT localhost:9200/demo/_settings?pretty -d '{
+  "analysis" : {
+    "analyzer" : {
+      "analyzer_demo" : {
+        "type" : "custom",
+        "char_filter" : [ "mapper_demo", "pattern_demo" ],
+        "tokenizer" : "whitespace",
+        "filter" : [ "lowercase", "edgeNGram" ]
+      }
+    }
+  }
+}'
+
+curl -XPOST localhost:9200/demo/_analyze?pretty -d '{
+  "analyzer" : "analyzer_demo",
+  "text" : "Sn@k3sHiss!"
+}'
+
+curl -XPOST localhost:9200/demo/_analyze?pretty -d '{
+  "analyzer" : "analyzer_demo",
+  "text" : "H3St@r3dAtTh3Sun!"
 }'

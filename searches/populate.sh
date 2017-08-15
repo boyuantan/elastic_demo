@@ -27,23 +27,15 @@ curl -XPUT localhost:9200/demo?pretty -d '{
         }
       },
       "analyzer" : {
-        "demo" : {
+        "analyzer_demo" : {
           "type" : "custom",
-          "char_filter" : [
-            "mapper_demo",
-            "pattern_demo"
-          ],
-          "tokenizer" : "standard",
-          "filter" : [
-            "lowercase"
-          ]
+          "char_filter" : [ "mapper_demo", "pattern_demo" ],
+          "tokenizer" : "whitespace",
+          "filter" : [ "lowercase", "edgeNGram" ]
         }
       }
     }
-  }
-}'
-
-curl -XPUT localhost:9200/demo?pretty -d '{
+  },
   "mappings" : {
     "book" : {
       "dynamic" : true,
@@ -52,7 +44,15 @@ curl -XPUT localhost:9200/demo?pretty -d '{
           "type" : "completion"
         },
         "title" : {
-          "analyzer" : ""
+          "type" : "text",
+          "analyzer" : "analyzer_demo"
+        },
+        "year" : {
+          "type" : "integer"
+        },
+        "author" : {
+          "type" : "text",
+          "analyzer" : "analyzer_demo"
         }
       }
     }
@@ -61,7 +61,11 @@ curl -XPUT localhost:9200/demo?pretty -d '{
 
 curl -XPUT localhost:9200/_bulk?pretty -d '
 { "index" : { "_index" : "demo", "_type" : "book", "_id" : 1 } }
-{ "suggest" : [ { "input" : "Brothers Karamazov", "weight" : 10 }, { "input" : "Fyodor Dostoyevsky", "weight" : 5 }], "author" : "Fyodor Dostoyevsky", "title" : "The Brothers Karamazov", "year" : 1880, "quote" : "I love mankind, he said, but I find to my amazement that the more I love mankind as a whole, the less I love man in particular."  }
+{ "suggest" : [ { "input" : "Brothers Karamazov", "weight" : 10 }, { "input" : "Fyodor Dostoyevsky", "weight" : 5 }], "author" : "Fyodor Dostoyevsky", "title" : "Th3Broth3rsK@r@m@zov", "year" : 1880, "quote" : "I love mankind, he said, but I find to my amazement that the more I love mankind as a whole, the less I love man in particular."  }
 { "index" : { "_index" : "demo", "_type" : "book", "_id" : 2 } }
-{ "author" : "Fyodor Dostoyevsky", "title" : "Crime and Punishment", "year" : 1866, "quote" : "The darker the night, the brighter the stars, the deeper the grief, the closer is God!" }
+{ "author" : "Fyodor Dostoyevsky", "title" : "Crim3AndPunishm3nt", "year" : 1866, "quote" : "The darker the night, the brighter the stars, the deeper the grief, the closer is God!" }
+{ "index" : { "_index" : "demo", "_type" : "book", "_id" : 3 } }
+{ "author" : "Yukio Mishima", "title" : "Th3D3c@yOfTh3Ang3l", "year" : 1971 }
+{ "index" : { "_index" : "demo", "_type" : "book", "_id" : 4 } }
+{ "author" : "Alistair MacLeod", "title" : "Isl@nd" }
 '

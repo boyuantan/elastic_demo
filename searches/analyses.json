@@ -1,6 +1,6 @@
 /*Character filters*/
 
-curl -XPOST localhost:9200/demo/_settings -d '{
+curl -XPUT localhost:9200/demo/_settings -d '{
   "analysis" : {
     "char_filter" : {
       "mapper_demo" : {
@@ -21,45 +21,62 @@ curl -XPOST localhost:9200/demo/_settings -d '{
 
 /*Tokenizers*/
 
-{
+curl -XPUT localhost:9200/demo/_settings -d '{
   "analysis" : {
     "tokenizer" : {
-      "edge_ngram" : {
-        "type" : "edge_ngram",
-        "min_gram" : 2,
-        "max_gram" : 5
+      "tokenizer_demo" : {
+        "type" : "pattern",
+        "pattern" : "(?<=\\p{Lower})(?=\\p{Upper})"
       }
     }
   }
-}
+}'
 
 /*Token filters*/
 
-{
+curl -XPUT localhost:9200/demo/_settings -d '{
   "analysis" : {
     "filter" : {
-      "edgeNGram" : {
+      "filter_demo" : {
         "type" : "edgeNGram",
         "min_gram" : 2,
         "max_gram" : 5
-      },
-      "stemmer_demo" : {
-        "type" : "stemmer",
-        "name" : "english"
       }
     }
   }
-}
+}'
 
 /*Different analyzer*/
 
 {
   "analysis" : {
     "analyzer" : {
-      "edge_ngram" : {
+      "analyzer_demo" : {
         "type" : "custom",
-
+        "char_filter" : [ "mapper_demo", "pattern_demo" ],
+        "tokenizer" : "standard",
+        "filter" : [ "lowercase", "edgeNGram" ]
       }
     }
   }
 }
+
+curl -XPUT localhost:9200/demo/_settings?pretty -d '{
+  "analysis" : {
+    "analyzer" : {
+      "analyzer_demo" : {
+        "type" : "custom",
+        "char_filter" : [ "mapper_demo" ],
+        "tokenizer" : "standard",
+        "filter" : [ "lowercase", "filter_demo" ]
+      }
+    }
+  }
+}'
+
+curl -XPUT localhost:9200/demo/book/5?pretty -d '{
+  "author" : "Plutarch",
+  "title" : "P@r@ll3lLiv3s",
+  "year" : 100,
+  "quote" : "Both warriors, that by all the worlds allowed."
+}'

@@ -1,0 +1,7 @@
+curl localhost:9200/demo/_search?pretty -d '{
+  "query" : {
+    "match" : {
+      "title" : "deca"
+    }
+  }
+}'
