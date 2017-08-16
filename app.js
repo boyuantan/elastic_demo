@@ -18,18 +18,27 @@ var client = new elastic.Client({
   host: 'localhost:9200'
 });
 
+app.use('/scripts', express.static(__dirname + '/scripts'));
+
 app.get('/', function(req, res, next) {
   res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 app.get('/search/:q', function(req, res) {
-  client.ping({
-    requestTimeout: 30000
-  }, function(err) {
+  client.search({
+    index: 'demo',
+    body: {
+      query: {
+        match: {
+          title: req.params.q
+        }
+      }
+    }
+  }, function(err, data) {
     if (err) {
-      throw err;
+      throw err
     } else {
-      console.log("All is well!");
+      res.send(data);
     }
   });
 });
