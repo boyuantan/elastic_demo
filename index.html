@@ -15,7 +15,7 @@
 
   <body>
     <div ng-controller="Main">
-      <h1 class="text-center">This page exists.</h1>
+      <h1 class="text-center">{{ input }}</h1>
       <br>
       <div class="container">
         <input id="search" type="text" ng-model="input" ng-model-options="{ debounce: 500 }" ng-change="search()" class="form-control">
@@ -24,7 +24,7 @@
         <br>
         <p ng-if="results.hits.length==0">No results found.</p>
         <div ng-if="results.hits.length>0">
-          <div class="panel panel-default" ng-repeat="hit in results.hits">
+          <div class="panel panel-primary" ng-repeat="hit in results.hits">
             <div class="panel-heading">{{ hit._source.title }}</div>
             <div class="panel-body">{{ hit._source.author }}</div>
           </div>

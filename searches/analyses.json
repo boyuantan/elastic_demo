@@ -9,11 +9,6 @@ curl -XPUT localhost:9200/demo/_settings -d '{
           "@ => a",
           "3 => e"
         ]
-      },
-      "pattern_demo" : {
-        "type" : "pattern_replace",
-        "pattern" : "(?<=\\p{Lower})(?=\\p{Upper})",
-        "replacement" : " "
       }
     }
   }
@@ -119,4 +114,27 @@ curl -XPUT localhost:9200/demo/book/5?pretty -d '{
   ],
   "author" : "Alistair Macleod",
   "title" : "Island"
+}
+
+"mappings" : {
+  "book" : {
+    "dynamic" : true,
+    "properties" : {
+      "suggest" : {
+        "type" : "completion"
+      },
+      "title" : {
+        "type" : "text",
+        "analyzer" : "title_analyzer",
+        "search_analyzer" : "standard"
+      },
+      "year" : {
+        "type" : "integer"
+      },
+      "author" : {
+        "type" : "text",
+        "analyzer" : "normal_analyzer"
+      }
+    }
+  }
 }

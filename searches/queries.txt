@@ -5,3 +5,17 @@ curl localhost:9200/demo/_search?pretty -d '{
     }
   }
 }'
+
+curl localhost:9200/demo/_search?pretty -d '{
+  "suggest" : {
+    "book-suggest" : {
+      "prefix" : "cap",
+      "completion" : {
+        "field" : "suggest",
+        "fuzzy" : {
+          "fuzziness" : "AUTO"
+        }
+      }
+    }
+  }
+}'

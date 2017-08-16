@@ -56,7 +56,7 @@ curl -XPUT localhost:9200/demo?pretty -d '{
         "title" : {
           "type" : "text",
           "analyzer" : "title_analyzer",
-          "search_analyzer" : "normal_analyzer"
+          "search_analyzer" : "standard"
         },
         "year" : {
           "type" : "integer"
@@ -78,5 +78,5 @@ curl -XPUT localhost:9200/_bulk?pretty -d '
 { "index" : { "_index" : "demo", "_type" : "book", "_id" : 3 } }
 { "author" : "Yukio Mishima", "title" : "Th3D3c@yOfTh3Ang3l", "year" : 1971 }
 { "index" : { "_index" : "demo", "_type" : "book", "_id" : 4 } }
-{ "author" : "Alistair MacLeod", "title" : "Isl@nd" }
+{ "suggest" : [ { "input" : "The Boat", "weight" : 10 }, { "input" : "Cape Breton", "weight" : 5 } ], "author" : "Alistair MacLeod", "title" : "Isl@nd" }
 '

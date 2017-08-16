@@ -1,7 +1,7 @@
 var app = angular.module('demo', []);
 
 app.controller('Main', function($scope, $http) {
-  $scope.results = { "Name" : "example" };
+  $scope.results = {};
 
   $scope.search = function() {
     if ($scope.input) {
