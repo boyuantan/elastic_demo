@@ -29,9 +29,13 @@ app.get('/search/:q', function(req, res) {
     index: 'demo',
     body: {
       query: {
-        match: {
-          title: req.params.q
+        multi_match: {
+          query: req.params.q,
+          fields: [ 'title', 'author' ]
         }
+        // match: {
+        //   title: req.params.q
+        // }
       }
     }
   }, function(err, data) {

@@ -12,26 +12,19 @@ curl -XPUT localhost:9200/demo?pretty -d '{
             "@ => a",
             "3 => e"
           ]
-        },
-        "pattern_demo" : {
-          "type" : "pattern_replace",
-          "pattern" : "(?<=\\p{Lower})(?=\\p{Upper})",
-          "replacement" : " "
         }
       },
-      "filter" : {
-        "edgeNGram" : {
-          "type" : "edgeNGram",
-          "min_gram" : 2,
-          "max_gram" : 5
+      "tokenizer" : {
+        "tokenizer_demo" : {
+          "type" : "pattern",
+          "pattern" : "(?<=\\p{Lower})(?=\\p{Upper})"
         }
       },
       "analyzer" : {
-        "analyzer_demo" : {
+        "title_analyzer" : {
           "type" : "custom",
-          "char_filter" : [ "mapper_demo", "pattern_demo" ],
-          "tokenizer" : "whitespace",
-          "filter" : [ "lowercase", "edgeNGram" ]
+          "char_filter" : [ "mapper_demo" ],
+          "tokenizer" : "tokenizer_demo"
         }
       }
     }
@@ -45,14 +38,13 @@ curl -XPUT localhost:9200/demo?pretty -d '{
         },
         "title" : {
           "type" : "text",
-          "analyzer" : "analyzer_demo"
+          "analyzer" : "title_analyzer"
         },
         "year" : {
           "type" : "integer"
         },
         "author" : {
-          "type" : "text",
-          "analyzer" : "analyzer_demo"
+          "type" : "text"
         }
       }
     }

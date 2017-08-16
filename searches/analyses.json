@@ -80,3 +80,43 @@ curl -XPUT localhost:9200/demo/book/5?pretty -d '{
   "year" : 100,
   "quote" : "Both warriors, that by all the worlds allowed."
 }'
+
+"analyzer" : {
+  "title_analyzer" : {
+    "type" : "custom",
+    "char_filter" : [ "mapper_demo" ],
+    "tokenizer" : "tokenizer_demo",
+    "filter" : [ "lowercase", "stopwords_demo", "filter_demo" ]
+  },
+  "author_analyzer" : {
+    "type" : "custom",
+    "tokenizer" : "whitespace",
+    "filter" : [ "lowercase", "filter_demo" ]
+  }
+}
+
+{
+  "suggest" : [
+    "The Boat",
+    "The Lost Salt Gift of Blood",
+    "As Birds Bring Forth the Sun",
+    "To Every Thing There is a Season"
+  ],
+  "author" : "Alistair Macleod",
+  "title" : "Island"
+}
+
+
+{
+  "suggest" : [
+    {
+      "input" : ["The Boat", "As Birds Bring Forth the Sun"],
+      "weight" : 10
+    }, {
+      "input" : "Cape Breton",
+      "weight" : 3
+    }
+  ],
+  "author" : "Alistair Macleod",
+  "title" : "Island"
+}

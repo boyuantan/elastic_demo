@@ -30,7 +30,7 @@ curl -XPOST localhost:9200/demo/_analyze?pretty -d '{
 curl localhost:9200/demo/_search?pretty -d '{
   "suggest" : {
     "book-suggest" : {
-      "prefix" : "bri",
+      "prefix" : "cape",
       "completion" : {
         "field" : "suggest",
         "fuzzy" : {
